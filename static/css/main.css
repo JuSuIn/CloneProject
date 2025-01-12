@@ -1,0 +1,32 @@
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+.material-symbols-outlined.fill {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.feed.left {
+  display: flex;
+  flex-direction: row;
+  align-items: center
+}
+
+.feed.left.one {
+  width: 40px;
+  height : 40px;
+  margin : 0px 10px;
+}
+
+.feed.left.one.profile {
+   border-radius: 50%;
+   width: 40px;
+   object-fit : contain;
+}
