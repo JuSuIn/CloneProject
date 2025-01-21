@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 
 from django.shortcuts import render
 from rest_framework import status
@@ -34,5 +35,23 @@ class Login(APIView):
 
 
     def post(self,request):
-        #todoLogin
-        pass
+        #todo Login
+        email = request.data.get('email', None)
+        password = request.data.get('password', None)
+
+        user=User.objects.filter(email=email).first() # querySet, only first
+
+        #print(user.check_password(password))
+
+        # todo no data Error return
+        if user is None:
+            return Response(status=400,data=dict(messages="회원정보가 잘못되었습니다."))
+
+        if user.check_password(password):
+            # todo login ,session and quki
+            print("!??!?")
+            return Response(status=200)
+        else:
+            return Response(status=400,data=dict(messages="회원정보가 잘못되었습니다."))
+
+
