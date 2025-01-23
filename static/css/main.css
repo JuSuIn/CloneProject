@@ -12,6 +12,11 @@
   'GRAD' 0,
   'opsz' 24
 }
+.rp {
+  width: 40px;
+  height : 40px;
+  border-radius: 50%;
+}
 
 .feed.left {
   display: flex;
@@ -29,6 +34,7 @@
   align-items: center;
   margin : 8px;
 }
+
 
 .feed.left.one {
   width: 40px;
