@@ -45,11 +45,13 @@ class Login(APIView):
 
         # todo no data Error return
         if user is None:
-            return Response(status=400,data=dict(messages="회원정보가 잘못되었습니다."))
+            return Response(status=404,data=dict(messages="회원정보가 잘못되었습니다."))
 
         if user.check_password(password):
             # todo login ,session and quki
-            print("!??!?")
+
+            request.session['email'] = email
+
             return Response(status=200)
         else:
             return Response(status=400,data=dict(messages="회원정보가 잘못되었습니다."))

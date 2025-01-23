@@ -5,6 +5,8 @@ from .models import Feed
 import os
 from Justagram.settings import MEDIA_ROOT
 from uuid import uuid4
+from user.models import User
+
 
 # Create your views here.
 class Main(APIView):
@@ -14,7 +16,20 @@ class Main(APIView):
         # feed print
         # for feed in feed_list:
         #     print(feed.content)
-        return render(request,"Justagram/main.html",context=dict(feeds=feed_list))
+
+       # print(" 로그인한 사용자 : ",request.session['email'])
+
+        email = request.session['email'] # session
+        user = User.objects.filter(email=email).first() # now login user information
+
+        print("확실히 제대로 되고 있는건가?!",user.profile_image)
+        if email is None:
+            return render(request, "user/login.html")
+
+        if user is None:
+            return render(request, "user/login.html")
+
+        return render(request,"Justagram/main.html",context=dict(feeds=feed_list,user=user))
 
 #file upload
 class UploadFeed(APIView):
