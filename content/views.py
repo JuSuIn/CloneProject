@@ -19,10 +19,10 @@ class Main(APIView):
 
        # print(" 로그인한 사용자 : ",request.session['email'])
 
-        email = request.session['email'] # session
+        email = request.session.get('email',None) #request.session['email'] # session
         user = User.objects.filter(email=email).first() # now login user information
 
-        print("확실히 제대로 되고 있는건가?!",user.profile_image)
+        #print("확실히 제대로 되고 있는건가?!",user.profile_image)
         if email is None:
             return render(request, "user/login.html")
 
