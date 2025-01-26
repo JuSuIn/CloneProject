@@ -14,9 +14,9 @@
       <script src="https://code.jquery.com/jquery-latest.min.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; position: fixed; width: 100%;">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; position: fixed; width: 100%; z-index: 999;">
        <div class="container-fluid" style="display: flex; justify-content: space-between; align-items: center;">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <svg aria-label="Instagram"
                  class="x1lliihq x1n2onr6 x5n08af"
                  fill="currentColor"
@@ -36,7 +36,7 @@
             <input class="form-control me-2" style="width : 400px" type="search" placeholder="Search" aria-label="Search">
         </div>
         <div style="display: flex; gap: 15px;">
-          <span class="material-symbols-outlined fill" style="padding-right: 2px">home</span>
+          <a href="/" style="color : black;"><span class="material-symbols-outlined fill" style="padding-right: 2px">home</span></a>
           <span class="material-symbols-outlined" style="padding-right: 2px">send</span>
           <span id="nav_bar_add_box" class="material-symbols-outlined" style="padding-right: 2px">add_box</span>
           <span class="material-symbols-outlined" style="padding-right: 2px">explore</span>
@@ -47,11 +47,11 @@
                  aria-expanded="false">
                   <div>
                        <img style="padding-right: 2px; width: 25px; height :25px; border-radius: 50%;"
-                           src="https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg"/>
+                           src="{% get_media_prefix %}{{ user.profile_image }}" />
                   </div>
               </a>
-              <ul class="dropdown-menu" style="left : -157px;" aria-labelledby="dropdownMenuLink">
-                <li><a class="dropdown-item" href="#">프로필</a></li>
+              <ul class="dropdown-menu" style="left : -157px; z-index: 0;" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="profile">프로필</a></li>
                 <li><a class="dropdown-item" href="#">....</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/user/logout">로그아웃</a></li>
@@ -70,7 +70,7 @@
         <!-- left profile picture -->
         <div style="padding : 20px 60px;">
            <img style="padding-right: 2px; width: 175px; height :175px; border-radius: 50%;"
-               src="https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg"/>
+               src="{% get_media_prefix %}{{ user.profile_image }}"/>
         </div>
         <!-- right area  -->
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left;">

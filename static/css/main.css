@@ -83,6 +83,8 @@
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(1.5px);
     -webkit-backdrop-filter: blur(1.5px);
+    z-index: 9999;
+
 }
 
 .modal_window {
