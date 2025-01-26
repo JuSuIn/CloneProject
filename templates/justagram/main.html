@@ -53,7 +53,7 @@
                  aria-expanded="false">
                   <div>
                        <img style="padding-right: 2px; width: 25px; height :25px; border-radius: 50%;"
-                           src="https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg"/>
+                           src="{% get_media_prefix %}{{ user.profile_image }}"/>
                   </div>
               </a>
               <ul class="dropdown-menu" style="left : -157px; z-index: 0;" aria-labelledby="dropdownMenuLink">
@@ -84,7 +84,7 @@
                     <div class="feed left">
                         <div class="feed left one" >
                             <!-- user profile -->
-                            <img src="{{ feed.profile_image }}"
+                            <img src="{% get_media_prefix %}{{ feed.profile_image }}"
                                  class="feed left one profile"
                             />
                         </div>
@@ -136,7 +136,7 @@
             <div class="po right">
                 <div class="po right one" >
                     <!-- user profile -->
-                    <img src="https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg"
+                    <img src="{% get_media_prefix %}{{ user.profile_image }}"
                          class="po right one profile"
                     />
                 </div>
@@ -304,13 +304,15 @@
 
       /* shard click */
       $('#feed_create_button').click(function(e){
-          alert('공유하기 누름'+$('#input_feed_content').val());
+          //alert('공유하기 누름'+$('#input_feed_content').val());
 
+          //feed file
           let file =  files[0];
           let image = files[0].name;
           let content =$('#input_feed_content').val();
-          let user_id='jusuin5876';
-          let profile_image='https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg';
+          let user_id="{{ user.nickname }}"; //'jusuin5876';
+          let profile_image= "{{ user.profile_image }}";
+              //'https://pimg.mk.co.kr/meet/neds/2016/07/image_readtop_2016_509303_14685745662548570.jpeg';
 
           let fd = new FormData();
           fd.append("file",file);
