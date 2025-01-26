@@ -31,7 +31,7 @@ class Main(APIView):
 
         return render(request,"Justagram/main.html",context=dict(feeds=feed_list,user=user))
 
-#file upload
+#feed file upload
 class UploadFeed(APIView):
     def post(self, request):
         file = request.FILES['file']
@@ -54,5 +54,19 @@ class UploadFeed(APIView):
 
         return Response(status=200)
 
+class Profile(APIView):
+    def get(self, request):
+        #print("test!!!");
+        email = request.session.get('email', None)  # request.session['email'] # session
+        user = User.objects.filter(email=email).first()  # now login user information
+
+        # print("확실히 제대로 되고 있는건가?!",user.profile_image)
+        if email is None:
+            return render(request, "user/login.html")
+
+        if user is None:
+            return render(request, "user/login.html")
+
+        return render(request,"content/profile.html",context=dict(user=user))
 
 
