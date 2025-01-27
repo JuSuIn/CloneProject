@@ -107,7 +107,31 @@ class Profile(APIView):
         if user is None:
             return render(request, "user/login.html")
 
-        return render(request,"content/profile.html",context=dict(user=user))
+
+        # my only click feed List ----------------------------------------------------------------------
+
+        # Filter only the feeds I wrote related to my profile
+        feed_list=Feed.objects.filter(email=email).all()
+        #Call the feed ID to display only the lists
+        # that you have liked related to your profile.
+        like_list = list(Like.objects.filter(email=email,is_like=True).values_list('feed_id',flat=True))
+        # Print only the list of likes included in the feed
+        like_feed_list =  Feed.objects.filter(id__in=like_list)
+
+        # Among the ways to retrieve profile-related bookmarks,
+        # I first retrieve a list of the feed IDs of the bookmarks I clicked on.
+        bookmark_list = list(BookMark.objects.filter(email=email, is_marked=True).values_list('feed_id',flat=True))
+        # Filters a feed and retrieves a list of bookmarks from the feed.
+        bookmark_feed_list = Feed.objects.filter(id__in=bookmark_list)
+
+        #print(like_list)
+        # ------------------------------------------------------------------------------------------------
+
+        return render(request,"content/profile.html",
+                      context=dict(feed_list=feed_list,
+                                   like_feed_list=like_feed_list,
+                                   bookmark_feed_list=bookmark_feed_list,
+                                   user=user))
 
 class UploadReply(APIView):
     def post(self, request):
