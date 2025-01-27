@@ -1,9 +1,11 @@
 #content url
 from django.urls import path
-from .views import UploadFeed,Profile,UploadReply
+from .views import UploadFeed,Profile,UploadReply,ToogleLike,ToogleBookMark
 
 urlpatterns = [
     path('upload',UploadFeed.as_view()),
     path('profile',Profile.as_view()),
     path('reply',UploadReply.as_view()),
+    path('like',ToogleLike.as_view()),
+    path('bookmark',ToogleBookMark.as_view())
 ]

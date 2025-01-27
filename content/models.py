@@ -12,7 +12,6 @@ class Feed(models.Model):
    # nickname= models.TextField(default='')  #Author(글쓴이)
     # user_id = models.TextField() #Author(글쓴이)
     email = models.EmailField(default='') #email(이메일)
-    like_count = models.IntegerField(default=0) #like count(좋아요 수)
 
 # like count
 class Like(models.Model):

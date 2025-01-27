@@ -97,12 +97,40 @@
                     <!-- icon set -->
                     <div style="margin : 0px 20px; display: flex; flex-direction: row; justify-content: space-between">
                         <div>
-                            <span class="material-symbols-outlined">favorite</span>
+                            <!-- like function -->
+                            {% if feed.is_liked %}
+                               <span id="favorite_{{ feed.id }}"
+                                     feed_id="{{ feed.id }}"
+                                     data-is-liked="{{ feed.is_liked }}"
+                                     class="favorite material-symbols-outlined fill"
+                                     style="color : red; cursor : pointer;">favorite</span>
+                            {% else %}
+                                 <span id="favorite_{{ feed.id }}"
+                                       feed_id="{{ feed.id }}"
+                                       data-is-liked="{{ feed.is_liked }}"
+                                       class="favorite material-symbols-outlined"
+                                       style="color : red; cursor : pointer;">favorite</span>
+                            {% endif %}
                             <span class="material-symbols-outlined">mode_comment</span>
                             <span class="material-symbols-outlined">send</span>
                         </div>
                         <div>
-                            <span class="material-symbols-outlined">bookmark</span>
+                            <!-- bookmark function -->
+                            {% if feed.is_marked %}
+                                 <span id="bookmark_{{ feed.id }}"
+                                       feed_id="{{ feed.id }}"
+                                       data-is-marked="{{ feed.is_marked }}"
+                                       class="bookmark material-symbols-outlined fill"
+                                       style="cursor : pointer;"
+                                 >bookmark</span>
+                            {% else %}
+                                <span id="bookmark_{{ feed.id }}"
+                                       feed_id="{{ feed.id }}"
+                                       data-is-marked="{{ feed.is_marked }}"
+                                       class="bookmark material-symbols-outlined"
+                                       style="cursor : pointer;"
+                                 >bookmark</span>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- name and favorite Text -->
@@ -117,7 +145,7 @@
                     <div id="reply_list_{{ feed.id }}">
                         {% for reply in feed.reply_list %}
                             <div style="margin : 0px 20px; text-align: left; font-size: 14px;">
-                                 <b>{{ reply.nickname }}</b> {{reply.reply_content }}
+                                 <b>{{ reply.nickname }}</b> {{ reply.reply_content }}
                             </div>
                         {%  endfor %}
                     </div>
@@ -312,6 +340,89 @@
 
 <!-- javascript jquery -->
   <script>
+       /* bookmark function */
+       $(".bookmark").click(function(event){
+           let bookmark_id=event.target.id;
+           // data-is-is_marked 속성에서 값 읽기
+           let isMarked = $('#'+bookmark_id).data("is-marked");
+           let feed_id=event.target.attributes.getNamedItem('feed_id').value;
+           let bookmark_text=$.trim($('#'+bookmark_id).html());
+           let isMark='';
+
+          var defClass="bookmark material-symbols-outlined";
+          var clickClass="bookmark material-symbols-outlined fill";
+
+           if ($(this).hasClass(clickClass)) {
+               $(this).removeClass(clickClass).addClass(defClass);
+               isMark = 'bookmark';
+           }else {
+                $(this).removeClass(defClass).addClass(clickClass);
+               isMark = 'bookmark_border';
+           }
+
+          $.ajax({
+                  url : "/content/bookmark",
+                  data : {
+                      feed_id : feed_id,
+                      bookmark_text : isMark
+                  },
+                  method : "POST",
+                  {#dataType : "json",#}
+                  success : function(data){
+                      console.log('북마크 완료');
+                  },
+                  error : function(request,status,error){
+                      console.log('북마크 에러');
+                  },
+                  complete : function(){
+                      console.log('북마크 완료');
+                  }
+              });
+       });
+
+      /* favorite function */
+      $(".favorite").click(function(event){
+          let favorite_id=event.target.id;
+          // data-is-liked 속성에서 값 읽기
+          let isLiked = $('#'+favorite_id).data("is-liked");
+          let feed_id=event.target.attributes.getNamedItem('feed_id').value;
+          let favorite_text=$.trim($('#'+favorite_id).html());
+          let isLike='';
+
+          var defClass="favorite material-symbols-outlined";
+          var clickClass="favorite material-symbols-outlined fill";
+
+           if ($(this).hasClass(clickClass)) {
+               $(this).removeClass(clickClass).addClass(defClass);
+               isLike = 'favorite';
+           }else {
+                $(this).removeClass(defClass).addClass(clickClass);
+                isLike = 'favorite_border';
+           }
+
+          //console.log(isLike);
+
+          $.ajax({
+                  url : "/content/like",
+                  data : {
+                      feed_id : feed_id,
+                      favorite_text : isLike
+                  },
+                  method : "POST",
+                  {#dataType : "json",#}
+                  success : function(data){
+                      console.log('좋아요 완료');
+                  },
+                  error : function(request,status,error){
+                      console.log('에러');
+                  },
+                  complete : function(){
+                      console.log('완료');
+                  }
+              });
+
+      });
+
       /* Implementation of comment window function */
       $(".upload_reply").click(function(event){
           {#console.log(event.target);#}

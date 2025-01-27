@@ -11,6 +11,23 @@ from user.models import User
 # Create your views here.
 class Main(APIView):
     def get(self, request):
+        email = request.session.get('email', None)  # request.session['email'] # session
+        user = User.objects.filter(email=email).first()  # now login user information
+
+        # print(feed_list)
+        # feed print
+        # for feed in feed_list:
+        #     print(feed.content)
+
+        # print(" 로그인한 사용자 : ",request.session['email'])
+
+        # print("확실히 제대로 되고 있는건가?!",user.profile_image)
+        if email is None:
+            return render(request, "user/login.html")
+
+        if user is None:
+            return render(request, "user/login.html")
+
 
         feed_object_list = Feed.objects.all().order_by('-id') # select * from content_feed; , querySet
         feed_list = []
@@ -31,33 +48,24 @@ class Main(APIView):
                 reply_list.append(dict(reply_content=reply.reply_content,
                                        nickname=user.nickname))
 
-            #print('찾는지 테스트',user.nickname)
+
+            like_count=Like.objects.filter(feed_id=feed.id,is_like=True).count()
+            is_liked=Like.objects.filter(feed_id=feed.id,email=email,is_like=True).exists()
+            is_marked = BookMark.objects.filter(feed_id=feed.id, email=email, is_marked=True).exists()
+
+            #print('like 확인중 ',is_liked)
+
             feed_list.append(dict(id=feed.id,
                                   content=feed.content,
                                   image=feed.image,
                                   profile_image=user.profile_image,
                                   nickname=user.nickname,
-                                  likes_count=feed.like_count,
-                                  reply_list=reply_list
+                                  like_count=like_count,
+                                  reply_list=reply_list,
+                                  is_liked=is_liked,
+                                  is_marked=is_marked,
                                   ))
 
-        email = request.session.get('email',None) #request.session['email'] # session
-        user = User.objects.filter(email=email).first() # now login user information
-
-
-        # print(feed_list)
-        # feed print
-        # for feed in feed_list:
-        #     print(feed.content)
-
-       # print(" 로그인한 사용자 : ",request.session['email'])
-
-        #print("확실히 제대로 되고 있는건가?!",user.profile_image)
-        if email is None:
-            return render(request, "user/login.html")
-
-        if user is None:
-            return render(request, "user/login.html")
 
         return render(request,"Justagram/main.html",context=dict(feeds=feed_list,user=user))
 
@@ -109,5 +117,49 @@ class UploadReply(APIView):
         email = request.session.get('email', None)  # request.session['email'] # session
 
         Reply.objects.create(feed_id=feed_id,reply_content=reply_content,email=email)
+
+        return Response(status=200)
+
+class ToogleLike(APIView):
+    def post(self, request):
+        feed_id = request.data.get('feed_id', None)
+        favorite_text = request.data.get('favorite_text',True)
+        email = request.session.get('email', None)
+        #email = request.data.get('email', None)
+
+        if favorite_text == 'favorite_border':
+            is_like = True
+        else:
+            is_like = False
+
+        like=Like.objects.filter(feed_id=feed_id,email=email).first()
+
+        if like:
+            like.is_like = is_like
+            like.save()
+        else:
+            Like.objects.create(feed_id=feed_id,is_like=is_like,email=email)
+
+        return Response(status=200)
+
+class ToogleBookMark(APIView):
+    def post(self, request):
+        feed_id = request.data.get('feed_id', None)
+        bookmark_text = request.data.get('bookmark_text', True)
+        email = request.session.get('email', None)
+        # email = request.data.get('email', None)
+
+        if bookmark_text == 'bookmark_border':
+            is_marked = True
+        else:
+            is_marked = False
+
+        bookmark = BookMark.objects.filter(feed_id=feed_id, email=email).first()
+
+        if bookmark:
+            bookmark.is_marked = is_marked
+            bookmark.save()
+        else:
+            BookMark.objects.create(feed_id=feed_id, is_marked=is_marked, email=email)
 
         return Response(status=200)
